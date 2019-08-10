@@ -127,9 +127,13 @@ class TestUserService(BaseTestCase):
             self.assertIn('marc', data['data']['users'][0]['username'])
             self.assertIn('marc@gmail.com', data['data']['users'][0]['email'])
             self.assertIn('philippe', data['data']['users'][1]['username'])
-            self.assertIn('philippe@gmail.com', data['data']['users'][1]['email'])
+            self.assertIn(
+                'philippe@gmail.com', data['data']['users'][1]['email']
+            )
             self.assertIn('mpdevilleres', data['data']['users'][2]['username'])
-            self.assertIn('mpdevilleres@gmail.com', data['data']['users'][2]['email'])
+            self.assertIn(
+                'mpdevilleres@gmail.com', data['data']['users'][2]['email']
+            )
 
     def test_main_no_users(self):
         response = self.client.get('/')
