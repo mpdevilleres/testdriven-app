@@ -15,6 +15,7 @@ before_install:
 # https://github.com/testdrivenio/testdriven-app-2.3/issues/26
 # build permission error
 before_script:
+  - export REACT_APP_USERS_SERVICE_URL=http://127.0.0.1
   - docker-compose up -d --build
 
 script:

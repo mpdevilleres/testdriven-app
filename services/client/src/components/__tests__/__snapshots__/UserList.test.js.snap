@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UsersList renders a snapshot properly 1`] = `
+Array [
+  <h4
+    className="box title is-4"
+  >
+    marc
+  </h4>,
+  <h4
+    className="box title is-4"
+  >
+    philippe
+  </h4>,
+]
+`;
