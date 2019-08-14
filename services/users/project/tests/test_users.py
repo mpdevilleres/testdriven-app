@@ -101,7 +101,11 @@ class TestUserService(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     def test_single_user(self):
-        user = add_user('mpdevilleres', 'mpdevilleres@gmail.com', 'randompasswordtest')
+        user = add_user(
+            'mpdevilleres',
+            'mpdevilleres@gmail.com',
+            'randompasswordtest'
+        )
         with self.client as client:
             response = client.get(f'/users/{user.id}')
             data = json.loads(response.data.decode())
@@ -127,9 +131,21 @@ class TestUserService(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     def test_all_users(self):
-        add_user('marc', 'marc@gmail.com', 'randompasswordtest')
-        add_user('philippe', 'philippe@gmail.com', 'randompasswordtest')
-        add_user('mpdevilleres', 'mpdevilleres@gmail.com', 'randompasswordtest')
+        add_user(
+            'marc',
+            'marc@gmail.com',
+            'randompasswordtest'
+        )
+        add_user(
+            'philippe',
+            'philippe@gmail.com',
+            'randompasswordtest'
+        )
+        add_user(
+            'mpdevilleres',
+            'mpdevilleres@gmail.com',
+            'randompasswordtest'
+        )
 
         with self.client as client:
             response = client.get('/users')
@@ -154,8 +170,16 @@ class TestUserService(BaseTestCase):
         self.assertIn('<p>No users!</p>', response.data.decode())
 
     def test_main_with_users(self):
-        add_user('marc', 'marc@gmail.com', 'randompasswordtest')
-        add_user('mpdevilleres', 'mpdevilleres@gmail.com', 'randompasswordtest')
+        add_user(
+            'marc',
+            'marc@gmail.com',
+            'randompasswordtest'
+        )
+        add_user(
+            'mpdevilleres',
+            'mpdevilleres@gmail.com',
+            'randompasswordtest'
+        )
         with self.client as client:
             response = client.get('/')
             data = response.data.decode()
