@@ -40,10 +40,11 @@ class UsersList(Resource):
 
         username = post_data.get('username')
         email = post_data.get('email')
+        password = post_data.get('password')
         try:
             user = User.query.filter_by(email=email).first()
             if not user:
-                db.session.add(User(username, email))
+                db.session.add(User(username, email, password))
                 db.session.commit()
                 response = {
                     'status': 'success',
@@ -53,7 +54,7 @@ class UsersList(Resource):
             else:
                 response['message'] = 'Sorry. That email already exists.'
                 return response, 400
-        except exc.IntegrityError:
+        except (exc.IntegrityError, ValueError):
             db.session.rollback()
             return response, 400
 
@@ -87,7 +88,8 @@ def index():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        db.session.add(User(username, email))
+        password = request.form['password']
+        db.session.add(User(username, email, password))
         db.session.commit()
     users = User.query.all()
     return render_template('index.html', users=users)

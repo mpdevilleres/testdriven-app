@@ -21,7 +21,8 @@ class TestUserService(BaseTestCase):
                 '/users',
                 data=json.dumps({
                     'username': 'marc',
-                    'email': 'marc@devilleres.org'
+                    'email': 'marc@devilleres.org',
+                    'password': 'randompasswordtest'
                 }),
                 content_type='application/json',
             )
@@ -48,6 +49,7 @@ class TestUserService(BaseTestCase):
                 '/users',
                 data=json.dumps({
                     'email': 'mpdevilleres@gmail.com',
+                    'password': 'randompasswordtest'
                 }),
                 content_type='application/json'
             )
@@ -57,13 +59,30 @@ class TestUserService(BaseTestCase):
             self.assertIn('Invalid payload', data['message'])
             self.assertIn('fail', data['status'])
 
+    def test_add_user_invalid_json_keys_no_password(self):
+        with self.client as client:
+            response = client.post(
+                '/users',
+                data=json.dumps({
+                    'username': 'marc',
+                    'email': 'marc@gmail.com'
+                }),
+                content_type='application/json'
+            )
+
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 400)
+            self.assertIn('Invalid payload.', data['message'])
+            self.assertIn('fail', data['status'])
+
     def test_add_user_duplicate_email(self):
         with self.client as client:
             client.post(
                 '/users',
                 data=json.dumps({
                     'username': 'mpdevilleres',
-                    'email': 'mpdevilleres@gmail.com'
+                    'email': 'mpdevilleres@gmail.com',
+                    'password': 'randompasswordtest'
                 }),
                 content_type='application/json',
             )
@@ -71,7 +90,8 @@ class TestUserService(BaseTestCase):
                 '/users',
                 data=json.dumps({
                     'username': 'mpdevilleres',
-                    'email': 'mpdevilleres@gmail.com'
+                    'email': 'mpdevilleres@gmail.com',
+                    'password': 'randompasswordtest'
                 }),
                 content_type='application/json',
             )
@@ -81,7 +101,7 @@ class TestUserService(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     def test_single_user(self):
-        user = add_user('mpdevilleres', 'mpdevilleres@gmail.com')
+        user = add_user('mpdevilleres', 'mpdevilleres@gmail.com', 'randompasswordtest')
         with self.client as client:
             response = client.get(f'/users/{user.id}')
             data = json.loads(response.data.decode())
@@ -107,9 +127,9 @@ class TestUserService(BaseTestCase):
             self.assertIn('fail', data['status'])
 
     def test_all_users(self):
-        add_user('marc', 'marc@gmail.com')
-        add_user('philippe', 'philippe@gmail.com')
-        add_user('mpdevilleres', 'mpdevilleres@gmail.com')
+        add_user('marc', 'marc@gmail.com', 'randompasswordtest')
+        add_user('philippe', 'philippe@gmail.com', 'randompasswordtest')
+        add_user('mpdevilleres', 'mpdevilleres@gmail.com', 'randompasswordtest')
 
         with self.client as client:
             response = client.get('/users')
@@ -134,8 +154,8 @@ class TestUserService(BaseTestCase):
         self.assertIn('<p>No users!</p>', response.data.decode())
 
     def test_main_with_users(self):
-        add_user('marc', 'marc@gmail.com')
-        add_user('mpdevilleres', 'mpdevilleres@gmail.com')
+        add_user('marc', 'marc@gmail.com', 'randompasswordtest')
+        add_user('mpdevilleres', 'mpdevilleres@gmail.com', 'randompasswordtest')
         with self.client as client:
             response = client.get('/')
             data = response.data.decode()
@@ -152,6 +172,7 @@ class TestUserService(BaseTestCase):
                 data={
                     'username': 'marc',
                     'email': 'marc@gmail.com',
+                    'password': 'randompasswordtest'
                 },
                 follow_redirects=True
             )
